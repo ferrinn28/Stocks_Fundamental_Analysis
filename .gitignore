@@ -1,2 +1,3 @@
 .venv/
 Testing/
+__pycache__/
