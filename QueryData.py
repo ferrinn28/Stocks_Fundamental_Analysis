@@ -15,3 +15,6 @@ class Data(object):
 
     def get_balance_sheet_annual(self):
         return(self.query.balance_sheet("a"))
+    
+    def get_history_price(self, period="ytd", interval="1d", start=None, end=None):
+        return(self.query.history(period=period, interval=interval, start=start, end=end))
