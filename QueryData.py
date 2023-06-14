@@ -29,10 +29,10 @@ class CalculateQuarter(Data):
 
     def calculate_book_value(self, date_input):
         date = pd.to_datetime(date_input)
+        
+        #Select Row Based on User Date Input
         rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == date]
-        print(rows, "\n")
 
-        # Select only the 'Name' and 'Age' columns
-        #selected_columns = df[['Name', 'Age']]
+        # Calculate Book Value
         BV = (rows["StockholdersEquity"][0])/(rows["ShareIssued"][0])
-        print(int((BV)), "\n")
+        return int(BV)
