@@ -1,11 +1,13 @@
 from yahooquery import Ticker
+import pandas as pd
 #tickers = Ticker('BMRI.JK')
 
 # Default period = ytd, interval = 1d
 #df = tickers.history()
 #print(df.head())
 
-class Data(object):
+#Super Class
+class Data:
     def __init__(self, ticker):
         code = ".".join([ticker, "JK"])
         self.query = Ticker(code)
@@ -18,3 +20,19 @@ class Data(object):
     
     def get_history_price(self, period="ytd", interval="1d", start=None, end=None):
         return(self.query.history(period=period, interval=interval, start=start, end=end))
+    
+#Sub Class
+class CalculateQuarter(Data):
+    def __init__(self, ticker):
+        super().__init__(ticker)
+        self.balance_sheet_quartal = self.get_balance_sheet_quarter()
+
+    def calculate_book_value(self, date_input):
+        date = pd.to_datetime(date_input)
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == date]
+        print(rows, "\n")
+
+        # Select only the 'Name' and 'Age' columns
+        #selected_columns = df[['Name', 'Age']]
+        BV = (rows["StockholdersEquity"][0])/(rows["ShareIssued"][0])
+        print(int((BV)), "\n")
