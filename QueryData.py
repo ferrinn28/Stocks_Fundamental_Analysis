@@ -1,6 +1,5 @@
 from yahooquery import Ticker
 import pandas as pd
-#tickers = Ticker('BMRI.JK')
 
 # Default period = ytd, interval = 1d
 #df = tickers.history()
@@ -23,15 +22,23 @@ class Data:
     
 #Sub Class
 class CalculateQuarter(Data):
-    def __init__(self, ticker):
+    def __init__(self, ticker, date_input):
         super().__init__(ticker)
         self.balance_sheet_quartal = self.get_balance_sheet_quarter()
+        self.input_date = pd.to_datetime(date_input)
 
-    def calculate_book_value(self, date_input):
-        date = pd.to_datetime(date_input)
+        #Gets Date Component (Year, Month, Date)
+        self.year = self.input_date.year
+        self.month = self.input_date.month
+        self.day = self.input_date.day
+
+    def calculate_book_value(self):
+        #date = pd.to_datetime(date_input)
+
+        print(f"Date of PBV {self.year}-{self.month}-{self.day}")
         
         #Select Row Based on User Date Input
-        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == date]
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
 
         # Calculate Book Value
         BV = (rows["StockholdersEquity"][0])/(rows["ShareIssued"][0])
