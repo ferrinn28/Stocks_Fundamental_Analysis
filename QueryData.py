@@ -32,14 +32,20 @@ class CalculateQuarter(Data):
         self.month = self.input_date.month
         self.day = self.input_date.day
 
-    def calculate_book_value(self):
-        #date = pd.to_datetime(date_input)
-
-        print(f"Date of PBV {self.year}-{self.month}-{self.day}")
-        
+    def calculate_book_value(self):  
         #Select Row Based on User Date Input
         rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
 
         # Calculate Book Value
         BV = (rows["StockholdersEquity"][0])/(rows["ShareIssued"][0])
         return int(BV)
+    
+    def calculate_price_book_value(self):
+        #Collect Historical Price Up to Next 15 Days From User Date Input
+        historical_price = self.get_history_price(period="1mo", interval="1d", 
+                                                  start=self.input_date, end=f"{self.year}-{self.month+1}-15")
+        selected_history = historical_price.iloc[0]["adjclose"]
+
+        #Calculate Price Book Ratio
+        PBV = selected_history/(self.calculate_book_value())
+        return float(f'{PBV:.2f}')
