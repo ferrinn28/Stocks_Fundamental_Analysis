@@ -31,6 +31,7 @@ class CalculateQuarter(Data):
     def __init__(self, ticker, date_input):
         super().__init__(ticker)
         self.balance_sheet_quartal = self.get_balance_sheet_quarter()
+        self.income_statement_quartal = self.get_income_statement_quarter()
         self.input_date = pd.to_datetime(date_input)
 
         #Gets Date Component (Year, Month, Date)
@@ -55,3 +56,13 @@ class CalculateQuarter(Data):
         #Calculate Price Book Ratio
         PBV = selected_history/(self.calculate_book_value())
         return float(f'{PBV:.2f}')
+    
+    def calculate_cumulative_revenue(self):
+        #Select Range of Time based on User Date Input
+        selected_revenue = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
+                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
+                                                           & (self.income_statement_quartal['periodType'] == "3M")]
+        
+        #Sum all revenue in period of time
+        cumulative_revenue = selected_revenue["TotalRevenue"].sum()
+        return cumulative_revenue
