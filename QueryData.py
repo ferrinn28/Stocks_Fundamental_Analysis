@@ -39,12 +39,15 @@ class CalculateQuarter(Data):
         self.month = self.input_date.month
         self.day = self.input_date.day
 
-    def calculate_book_value(self):  
-        #Select Row Based on User Date Input
+        #Always Used Components
+        ##Select Row Based on User Date Input
         rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
+        self.equity = rows["StockholdersEquity"][0]
+        self.shares = rows["ShareIssued"][0]
 
+    def calculate_book_value(self):  
         # Calculate Book Value
-        BV = (rows["StockholdersEquity"][0])/(rows["ShareIssued"][0])
+        BV = (self.equity/self.shares)
 
         return int(BV)
     
@@ -88,14 +91,10 @@ class CalculateQuarter(Data):
         return cumulative_net_income, quartal[0]
     
     def calculate_ROE(self):
-        #Get Equity
-        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
-        equity = rows["StockholdersEquity"][0]
-
         #Annualization
         cumulative_net_income = self.calculate_cumulative_net_income()[0]
         total_quartal = self.calculate_cumulative_net_income()[1]
-        roe = ((cumulative_net_income * (4/total_quartal))/(equity))*100
+        roe = ((cumulative_net_income * (4/total_quartal))/(self.equity))*100
 
         return float(f'{roe:.2f}')
     
@@ -110,14 +109,10 @@ class CalculateQuarter(Data):
         return float(f'{npm:.2f}')
 
     def calculate_EPS(self):
-        #Get Outstanding Shares
-        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
-        shares = rows["ShareIssued"][0]
-
         #Annulaization
         cumulative_net_income = self.calculate_cumulative_net_income()[0]
         total_quartal = self.calculate_cumulative_net_income()[1]
-        eps = ((cumulative_net_income * (4/total_quartal))/(shares))
+        eps = ((cumulative_net_income * (4/total_quartal))/(self.shares))
 
         return float(f'{eps:.2f}')
     
