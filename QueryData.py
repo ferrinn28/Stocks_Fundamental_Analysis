@@ -120,3 +120,14 @@ class CalculateQuarter(Data):
         eps = ((cumulative_net_income * (4/total_quartal))/(shares))
 
         return float(f'{eps:.2f}')
+    
+    def calculate_PER(self):
+        #Collect Historical Price Up to Next 15 Days From User Date Input
+        historical_price = self.get_history_price(period="1mo", interval="1d", 
+                                                  start=self.input_date, end=f"{self.year}-{self.month+1}-15")
+        selected_history = historical_price.iloc[0]["adjclose"]
+
+        #Calculate Price Earning Ratio
+        per = selected_history/(self.calculate_EPS())
+
+        return float(f'{per:.2f}')

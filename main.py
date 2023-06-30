@@ -14,3 +14,4 @@ if __name__ == "__main__":
     print(f"NPM of {ticker_code} Q1 :", searching_data.calculate_net_profit_margin(), "%")
     print(f"ROE of {ticker_code} :", searching_data.calculate_ROE(), "%")
     print(f"EPS of {ticker_code} :", searching_data.calculate_EPS())
+    print(f"PER of {ticker_code} :", searching_data.calculate_PER())
