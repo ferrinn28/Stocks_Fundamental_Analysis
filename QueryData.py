@@ -63,9 +63,12 @@ class CalculateQuarter(Data):
                                                            & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
                                                            & (self.income_statement_quartal['periodType'] == "3M")]
         
+        #Check Total Quartal
+        quartal = selected_revenue.shape
+        
         #Sum All revenue in period of time
         cumulative_revenue = selected_revenue["TotalRevenue"].sum()
-        return cumulative_revenue
+        return cumulative_revenue, quartal[0]
     
     def calculate_cumulative_net_income(self):
         #Select Range of Time based on User Date Input
@@ -73,6 +76,21 @@ class CalculateQuarter(Data):
                                                            & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
                                                            & (self.income_statement_quartal['periodType'] == "3M")]
         
+        #Check Total Quartal
+        quartal = selected_net_income.shape
+
         #Sum All Net Income in period of time
         cumulative_net_income = selected_net_income["NetIncomeCommonStockholders"].sum()
-        return cumulative_net_income
+        return cumulative_net_income, quartal[0]
+    
+    def calculate_ROE(self):
+        #Get Equity
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
+        equity = rows["StockholdersEquity"][0]
+
+        #Annualization
+        cumulative_net_income = self.calculate_cumulative_net_income()[0]
+        total_quartal = self.calculate_cumulative_net_income()[1]
+        roe = ((cumulative_net_income * (4/total_quartal))/(equity))*100
+
+        return float(f'{roe:.2f}')
