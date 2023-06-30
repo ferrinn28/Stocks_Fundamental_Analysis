@@ -45,6 +45,7 @@ class CalculateQuarter(Data):
 
         # Calculate Book Value
         BV = (rows["StockholdersEquity"][0])/(rows["ShareIssued"][0])
+
         return int(BV)
     
     def calculate_price_book_value(self):
@@ -55,6 +56,7 @@ class CalculateQuarter(Data):
 
         #Calculate Price Book Ratio
         PBV = selected_history/(self.calculate_book_value())
+
         return float(f'{PBV:.2f}')
     
     def calculate_cumulative_revenue(self):
@@ -68,6 +70,7 @@ class CalculateQuarter(Data):
         
         #Sum All revenue in period of time
         cumulative_revenue = selected_revenue["TotalRevenue"].sum()
+
         return cumulative_revenue, quartal[0]
     
     def calculate_cumulative_net_income(self):
@@ -81,6 +84,7 @@ class CalculateQuarter(Data):
 
         #Sum All Net Income in period of time
         cumulative_net_income = selected_net_income["NetIncomeCommonStockholders"].sum()
+
         return cumulative_net_income, quartal[0]
     
     def calculate_ROE(self):
@@ -94,3 +98,13 @@ class CalculateQuarter(Data):
         roe = ((cumulative_net_income * (4/total_quartal))/(equity))*100
 
         return float(f'{roe:.2f}')
+    
+    def calculate_net_profit_margin(self):
+        #Get Components
+        cumulative_revenue = self.calculate_cumulative_revenue()[0]
+        cummulative_net_income = self.calculate_cumulative_net_income()[0]
+
+        #NPM Data
+        NPM = (cummulative_net_income/cumulative_revenue)*100
+
+        return float(f'{NPM:.2f}')
