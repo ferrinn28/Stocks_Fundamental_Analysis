@@ -105,6 +105,18 @@ class CalculateQuarter(Data):
         cummulative_net_income = self.calculate_cumulative_net_income()[0]
 
         #NPM Data
-        NPM = (cummulative_net_income/cumulative_revenue)*100
+        npm = (cummulative_net_income/cumulative_revenue)*100
 
-        return float(f'{NPM:.2f}')
+        return float(f'{npm:.2f}')
+
+    def calculate_EPS(self):
+        #Get Outstanding Shares
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
+        shares = rows["ShareIssued"][0]
+
+        #Annulaization
+        cumulative_net_income = self.calculate_cumulative_net_income()[0]
+        total_quartal = self.calculate_cumulative_net_income()[1]
+        eps = ((cumulative_net_income * (4/total_quartal))/(shares))
+
+        return float(f'{eps:.2f}')
