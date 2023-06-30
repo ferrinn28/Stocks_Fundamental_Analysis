@@ -9,4 +9,5 @@ if __name__ == "__main__":
     print("\n")
     print(f"Book Value of {ticker_code} :", searching_data.calculate_book_value())
     print(f"Price Book Value of {ticker_code} :", searching_data.calculate_price_book_value())
-    print(f"Cummulative Revenue {ticker_code} Q1 :", searching_data.calculate_cumulative_revenue())
+    print(f"Cumulative Revenue {ticker_code} Q1 :", searching_data.calculate_cumulative_revenue())
+    print(f"Cumulative Net Income {ticker_code} Q1 :", searching_data.calculate_cumulative_net_income())

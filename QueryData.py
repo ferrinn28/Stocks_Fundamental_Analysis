@@ -63,6 +63,16 @@ class CalculateQuarter(Data):
                                                            & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
                                                            & (self.income_statement_quartal['periodType'] == "3M")]
         
-        #Sum all revenue in period of time
+        #Sum All revenue in period of time
         cumulative_revenue = selected_revenue["TotalRevenue"].sum()
         return cumulative_revenue
+    
+    def calculate_cumulative_net_income(self):
+        #Select Range of Time based on User Date Input
+        selected_net_income = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
+                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
+                                                           & (self.income_statement_quartal['periodType'] == "3M")]
+        
+        #Sum All Net Income in period of time
+        cumulative_net_income = selected_net_income["NetIncomeCommonStockholders"].sum()
+        return cumulative_net_income
