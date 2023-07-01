@@ -45,22 +45,42 @@ class CalculateQuarter(Data):
         self.equity = rows["StockholdersEquity"][0]
         self.shares = rows["ShareIssued"][0]
 
+        ##Collect 1 Month Historical Price
+        self.historical_price = self.get_history_price(period="1mo", interval="1d", 
+                                                  start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-31")
+
+    def get_specific_historical_price(self):
+        #Change Date Index into New Column
+        historical_price = self.historical_price.reset_index()
+        historical_price["date"] = pd.to_datetime(historical_price["date"])
+        
+        #Check If On a date has a value
+        selected_history = historical_price[historical_price["date"] == self.input_date]
+        if selected_history.empty:
+            i = 1
+            while selected_history.empty:
+                selected_history = historical_price[historical_price["date"].dt.day == self.day -i]
+                i = i + 1
+
+            return selected_history.iloc[0]["adjclose"]
+        else:
+
+            return selected_history.iloc[0]["adjclose"]
+
     def calculate_book_value(self):  
         # Calculate Book Value
-        BV = (self.equity/self.shares)
+        bv = (self.equity/self.shares)
 
-        return int(BV)
+        return int(bv)
     
     def calculate_price_book_value(self):
-        #Collect Historical Price Up to Next 15 Days From User Date Input
-        historical_price = self.get_history_price(period="1mo", interval="1d", 
-                                                  start=self.input_date, end=f"{self.year}-{self.month+1}-15")
-        selected_history = historical_price.iloc[0]["adjclose"]
+        #Get Historical Price
+        historical_price = self.get_specific_historical_price()
 
         #Calculate Price Book Ratio
-        PBV = selected_history/(self.calculate_book_value())
+        pbv = historical_price/(self.calculate_book_value())
 
-        return float(f'{PBV:.2f}')
+        return float(f'{pbv:.2f}')
     
     def calculate_cumulative_revenue(self):
         #Select Range of Time based on User Date Input
@@ -117,12 +137,10 @@ class CalculateQuarter(Data):
         return float(f'{eps:.2f}')
     
     def calculate_PER(self):
-        #Collect Historical Price Up to Next 15 Days From User Date Input
-        historical_price = self.get_history_price(period="1mo", interval="1d", 
-                                                  start=self.input_date, end=f"{self.year}-{self.month+1}-15")
-        selected_history = historical_price.iloc[0]["adjclose"]
+        #Get Historical Price
+        historical_price = self.get_specific_historical_price()
 
         #Calculate Price Earning Ratio
-        per = selected_history/(self.calculate_EPS())
+        per = historical_price/(self.calculate_EPS())
 
         return float(f'{per:.2f}')
