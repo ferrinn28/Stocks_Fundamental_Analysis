@@ -43,7 +43,21 @@ class CalculateQuarter(Data):
 
         ##Collect 1 Month Historical Price
         self.historical_price = self.get_history_price(period="1mo", interval="1d", 
-                                                  start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-31")
+                                                  start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
+        
+        ##Select Some Quartals in a Year based on user input date
+        selected_income_statement = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
+                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
+                                                           & (self.income_statement_quartal['periodType'] == "3M")]
+        ###Check Total Quartal
+        total_of_quartal = selected_income_statement.shape
+        self.quartal = total_of_quartal[0]
+        
+        ###Sum All revenue in period of time
+        self.cumulative_revenue = selected_income_statement["TotalRevenue"].sum()
+
+        #Sum All Net Income in period of time
+        self.cumulative_net_income = selected_income_statement["NetIncomeCommonStockholders"].sum()
 
     def get_specific_historical_price(self):
         #Change Date Index into New Column
@@ -77,47 +91,19 @@ class CalculateQuarter(Data):
         pbv = historical_price/(self.calculate_book_value())
 
         return float(f'{pbv:.2f}')
-    
-    def calculate_cumulative_revenue(self):
-        #Select Range of Time based on User Date Input
-        selected_revenue = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
-                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
-                                                           & (self.income_statement_quartal['periodType'] == "3M")]
-        
-        #Check Total Quartal
-        quartal = selected_revenue.shape
-        
-        #Sum All revenue in period of time
-        cumulative_revenue = selected_revenue["TotalRevenue"].sum()
 
-        return cumulative_revenue, quartal[0]
-    
-    def calculate_cumulative_net_income(self):
-        #Select Range of Time based on User Date Input
-        selected_net_income = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
-                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
-                                                           & (self.income_statement_quartal['periodType'] == "3M")]
-        
-        #Check Total Quartal
-        quartal = selected_net_income.shape
-
-        #Sum All Net Income in period of time
-        cumulative_net_income = selected_net_income["NetIncomeCommonStockholders"].sum()
-
-        return cumulative_net_income, quartal[0]
-    
     def calculate_ROE(self):
         #Annualization
-        cumulative_net_income = self.calculate_cumulative_net_income()[0]
-        total_quartal = self.calculate_cumulative_net_income()[1]
+        cumulative_net_income = self.cumulative_net_income
+        total_quartal = self.quartal
         roe = ((cumulative_net_income * (4/total_quartal))/(self.equity))*100
 
         return float(f'{roe:.2f}')
     
     def calculate_net_profit_margin(self):
         #Get Components
-        cumulative_revenue = self.calculate_cumulative_revenue()[0]
-        cummulative_net_income = self.calculate_cumulative_net_income()[0]
+        cumulative_revenue = self.cumulative_revenue
+        cummulative_net_income = self.cumulative_net_income
 
         #NPM Data
         npm = (cummulative_net_income/cumulative_revenue)*100
@@ -126,8 +112,8 @@ class CalculateQuarter(Data):
 
     def calculate_EPS(self):
         #Annulaization
-        cumulative_net_income = self.calculate_cumulative_net_income()[0]
-        total_quartal = self.calculate_cumulative_net_income()[1]
+        cumulative_net_income = self.cumulative_net_income
+        total_quartal = self.quartal
         eps = ((cumulative_net_income * (4/total_quartal))/(self.shares))
 
         return float(f'{eps:.2f}')
