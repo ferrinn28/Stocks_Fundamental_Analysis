@@ -1,10 +1,6 @@
 from yahooquery import Ticker
 import pandas as pd
 
-# Default period = ytd, interval = 1d
-#df = tickers.history()
-#print(df.head())
-
 #Super Class
 class Data:
     def __init__(self, ticker):
