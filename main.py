@@ -4,12 +4,17 @@ if __name__ == "__main__":
     ticker_code = input("Kode Emiten: ")
 
     sheet_overview = Data(ticker_code)
+    print("AVAILABLE REPORTS")
     print(sheet_overview.get_balance_sheet_quarter())
 
-    date = "2022-12-31"
+    #Choose Date to Review
+    year = input("Selects Year: ")
+    month = input("Selects Month: ")
+    day = input("Selects Day: ")
+    date = f"{year}-{month}-{day}"
     searching_data = CalculateQuarter(ticker_code, date)
 
-    #print(searching_data.get_balance_sheet_quarter())
+    #Calculating Fundamental Parameter
     print("\n")
     print(f"Cumulative Revenue    {ticker_code} {date} :", searching_data.cumulative_revenue)
     print(f"Cumulative Net Income {ticker_code} {date} :", searching_data.cumulative_net_income)
