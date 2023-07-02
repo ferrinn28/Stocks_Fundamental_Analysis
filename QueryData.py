@@ -5,7 +5,7 @@ import pandas as pd
 class Data:
     def __init__(self, ticker):
         code = ".".join([ticker, "JK"])
-        self.query = Ticker(code)
+        self.query = Ticker(code.upper())
 
     def get_balance_sheet_quarter(self):
         return(self.query.balance_sheet("q"))
