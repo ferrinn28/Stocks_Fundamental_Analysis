@@ -1,4 +1,6 @@
 from QueryData import Data, CalculateQuarter
+import json
+import pandas as pd
 
 if __name__ == "__main__":
     ticker_code = input("Kode Emiten: ")
@@ -16,12 +18,30 @@ if __name__ == "__main__":
     #Calculating Fundamental Parameter
     searching_data = CalculateQuarter(ticker_code, date)
 
-    print("\n")
-    print(f"Cumulative Revenue    {ticker_code} {date} :", searching_data.cumulative_revenue)
-    print(f"Cumulative Net Income {ticker_code} {date} :", searching_data.cumulative_net_income)
-    print(f"BV  of {ticker_code} {date} :", searching_data.calculate_book_value())
-    print(f"PBV of {ticker_code} {date} :", searching_data.calculate_price_book_value())
-    print(f"NPM of {ticker_code} {date} :", searching_data.calculate_net_profit_margin(), "%")
-    print(f"ROE of {ticker_code} {date} :", searching_data.calculate_ROE(), "%")
-    print(f"EPS of {ticker_code} {date} :", searching_data.calculate_EPS())
-    print(f"PER of {ticker_code} {date} :", searching_data.calculate_PER())
+    #Output in Dictionary
+    pd.options.display.float_format = '{:.2f}'.format
+
+    data_fundamentals = {
+        "Code": f"{ticker_code}",
+        "Date": date,
+        "Fundamental Data": {
+            "Cumulative Revenue": searching_data.cumulative_revenue,        #in rupiah
+            "Cumulative Net Income": searching_data.cumulative_net_income,  #in rupiah
+            "BV": searching_data.calculate_book_value(),                    #in rupiah
+            "PBV": searching_data.calculate_price_book_value(),
+            "NPM": searching_data.calculate_net_profit_margin(),            #in %
+            "ROE": searching_data.calculate_ROE(),                          #in %
+            "EPS": searching_data.calculate_EPS(),                          #in rupiah
+            "PER": searching_data.calculate_PER()
+        }
+    }
+
+    #Convert into json format
+    json_format = json.dumps(data_fundamentals, indent=4)
+    print(json_format, "\n")
+
+    #Convert into Dataframe
+    df_upload = pd.DataFrame(json.loads(json_format))
+    print(df_upload)
+    #print(df_upload.index.values)
+    #print(df_upload.loc["BV"]["Code"])
