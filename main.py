@@ -45,3 +45,4 @@ if __name__ == "__main__":
     print(df_upload)
     #print(df_upload.index.values)
     #print(df_upload.loc["BV"]["Code"])
+    #df_upload.to_excel(excel_writer="C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing\\output.xlsx", sheet_name=f'{ticker_code}')
