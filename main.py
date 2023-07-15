@@ -23,21 +23,7 @@ if __name__ == "__main__":
         #Output in Dictionary
         pd.options.display.float_format = '{:.2f}'.format
 
-        data_fundamentals = {
-            "Code": f"{ticker_code}",
-            "Type Report": f"{checking}",
-            "Date": date,
-            "Fundamental Data": {
-                "Cumulative Revenue": searching_data.cumulative_revenue,        #in rupiah
-                "Cumulative Net Income": searching_data.cumulative_net_income,  #in rupiah
-                "BV": searching_data.calculate_book_value(),                    #in rupiah
-                "PBV": searching_data.calculate_price_book_value(),
-                "NPM": searching_data.calculate_net_profit_margin(),            #in %
-                "ROE": searching_data.calculate_ROE(),                          #in %
-                "EPS": searching_data.calculate_EPS(),                          #in rupiah
-                "PER": searching_data.calculate_PER()
-            }
-        }
+        data_fundamentals = searching_data.output(ticker_code, date_input)
 
         #Convert into json format
         json_format = json.dumps(data_fundamentals, indent=4)
@@ -66,21 +52,7 @@ if __name__ == "__main__":
         #Output in Dictionary
         pd.options.display.float_format = '{:.2f}'.format
 
-        data_fundamentals = {
-            "Code": f"{ticker_code}",
-            "Type Report": f"{checking}",
-            "Date": date,
-            "Fundamental Data": {
-                "Cumulative Revenue": searching_data.revenue,                   #in rupiah
-                "Cumulative Net Income": searching_data.net_income,             #in rupiah
-                "BV": searching_data.calculate_book_value(),                    #in rupiah
-                "PBV": searching_data.calculate_price_book_value(),
-                "NPM": searching_data.calculate_net_profit_margin(),            #in %
-                "ROE": searching_data.calculate_ROE(),                          #in %
-                "EPS": searching_data.calculate_EPS(),                          #in rupiah
-                "PER": searching_data.calculate_PER()
-            }
-        }
+        data_fundamentals = searching_data.output(ticker_code, date_input)
 
         #Convert into json format
         json_format = json.dumps(data_fundamentals, indent=4)

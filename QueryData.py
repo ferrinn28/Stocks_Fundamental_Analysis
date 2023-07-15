@@ -128,6 +128,25 @@ class CalculateQuarter(Data):
         per = historical_price/(self.calculate_EPS())
 
         return float(f'{per:.2f}')
+    
+    def output(self, ticker_code, date):
+        data_fundamentals = {
+            "Code": f"{ticker_code}",
+            "Type Report": "Quartal",
+            "Date": date,
+            "Fundamental Data": {
+                "Cumulative Revenue": self.cumulative_revenue,                  #in rupiah
+                "Cumulative Net Income": self.cumulative_net_income,            #in rupiah
+                "BV": self.calculate_book_value(),                              #in rupiah
+                "PBV": self.calculate_price_book_value(),
+                "NPM": self.calculate_net_profit_margin(),                      #in %
+                "ROE": self.calculate_ROE(),                                    #in %
+                "EPS": self.calculate_EPS(),                                    #in rupiah
+                "PER": self.calculate_PER()
+            }
+        }
+
+        return data_fundamentals
 
 
 
@@ -223,3 +242,22 @@ class CalculateAnnual(Data):
         per = historical_price/(self.calculate_EPS())
 
         return float(f'{per:.2f}')
+    
+    def output(self, ticker_code, date):
+        data_fundamentals = {
+            "Code": f"{ticker_code}",
+            "Type Report": "Annual",
+            "Date": date,
+            "Fundamental Data": {
+                "Cumulative Revenue": self.revenue,                   #in rupiah
+                "Cumulative Net Income": self.net_income,             #in rupiah
+                "BV": self.calculate_book_value(),                    #in rupiah
+                "PBV": self.calculate_price_book_value(),
+                "NPM": self.calculate_net_profit_margin(),            #in %
+                "ROE": self.calculate_ROE(),                          #in %
+                "EPS": self.calculate_EPS(),                          #in rupiah
+                "PER": self.calculate_PER()
+            }
+        }
+
+        return data_fundamentals
