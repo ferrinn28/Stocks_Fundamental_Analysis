@@ -23,7 +23,8 @@ if __name__ == "__main__":
         #Output in Dictionary
         pd.options.display.float_format = '{:.2f}'.format
 
-        data_fundamentals = searching_data.output(ticker_code, date)
+        data_fundamentals = searching_data.output()
+        #print(data_fundamentals)
 
         #Convert into json format
         json_format = json.dumps(data_fundamentals, indent=4)
@@ -52,7 +53,8 @@ if __name__ == "__main__":
         #Output in Dictionary
         pd.options.display.float_format = '{:.2f}'.format
 
-        data_fundamentals = searching_data.output(ticker_code, date)
+        data_fundamentals = searching_data.output()
+        #print(data_fundamentals)
 
         #Convert into json format
         json_format = json.dumps(data_fundamentals, indent=4)

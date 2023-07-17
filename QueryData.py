@@ -3,9 +3,10 @@ import pandas as pd
 
 #Super Class
 class Data:
+
     def __init__(self, ticker):
-        code = ".".join([ticker, "JK"])
-        self.query = Ticker(code.upper())
+        self.code = ".".join([ticker, "JK"])
+        self.query = Ticker(self.code.upper())
 
     def get_balance_sheet_quarter(self):
         return(self.query.balance_sheet("q"))
@@ -26,6 +27,7 @@ class Data:
 
 #Sub Class Quarter Data Value
 class CalculateQuarter(Data):
+
     def __init__(self, ticker, date_input):
         super().__init__(ticker)
         self.balance_sheet_quartal = self.get_balance_sheet_quarter()
@@ -129,11 +131,12 @@ class CalculateQuarter(Data):
 
         return float(f'{per:.2f}')
     
-    def output(self, ticker_code, date):
+    def output(self):
+        #Return Fundamentals Calculations
         data_fundamentals = {
-            "Code": f"{ticker_code}",
+            "Code": f"{self.code}",
             "Type Report": "Quartal",
-            "Date": date,
+            "Date": self.input_date.strftime('%Y-%m-%d'),
             "Fundamental Data": {
                 "Cumulative Revenue": self.cumulative_revenue,                  #in rupiah
                 "Cumulative Net Income": self.cumulative_net_income,            #in rupiah
@@ -152,6 +155,7 @@ class CalculateQuarter(Data):
 
 #Sub Class Annual Data Value
 class CalculateAnnual(Data):
+
     def __init__(self, ticker, date_input):
         super().__init__(ticker)
         self.balance_sheet_annual = self.get_balance_sheet_annual()
@@ -243,11 +247,12 @@ class CalculateAnnual(Data):
 
         return float(f'{per:.2f}')
     
-    def output(self, ticker_code, date):
+    def output(self):
+        #Return Fundamentals Calculations
         data_fundamentals = {
-            "Code": f"{ticker_code}",
+            "Code": f"{self.code}",
             "Type Report": "Annual",
-            "Date": date,
+            "Date": self.input_date.strftime('%Y-%m-%d'),
             "Fundamental Data": {
                 "Cumulative Revenue": self.revenue,                   #in rupiah
                 "Cumulative Net Income": self.net_income,             #in rupiah
