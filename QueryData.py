@@ -2,7 +2,7 @@ from yahooquery import Ticker
 import pandas as pd
 
 #Super Class
-class Data:
+class QueryData:
 
     def __init__(self, ticker):
         self.code = ".".join([ticker, "JK"])
@@ -26,7 +26,7 @@ class Data:
 
 
 #Sub Class Quarter Data Value
-class CalculateQuarter(Data):
+class CalculateQuarter(QueryData):
 
     def __init__(self, ticker, date_input):
         super().__init__(ticker)
@@ -154,7 +154,7 @@ class CalculateQuarter(Data):
 
 
 #Sub Class Annual Data Value
-class CalculateAnnual(Data):
+class CalculateAnnual(QueryData):
 
     def __init__(self, ticker, date_input):
         super().__init__(ticker)
