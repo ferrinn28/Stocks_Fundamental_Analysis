@@ -1,10 +1,10 @@
-from QueryData import Data, CalculateQuarter, CalculateAnnual
+from query_data import QueryData, CalculateQuarter, CalculateAnnual
 import json
 import pandas as pd
 
 if __name__ == "__main__":
     ticker_code = input("Kode Emiten: ")
-    sheet_overview = Data(ticker_code)
+    sheet_overview = QueryData(ticker_code)
     checking = input("Check Annual (a) or Quartal (q)?:")
 
     if checking.lower() == "q":
