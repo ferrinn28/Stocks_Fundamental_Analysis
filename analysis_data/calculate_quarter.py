@@ -1,36 +1,13 @@
-from yahooquery import Ticker
+from .query_data import QueryData
 import pandas as pd
 
-#Query Data for Specific Ticker
-class QueryData:
-
-    def __init__(self, ticker):
-        self.code = ".".join([ticker, "JK"])
-        self.query = Ticker(self.code.upper())
-
-    def get_balance_sheet_quarter(self):
-        return(self.query.balance_sheet("q"))
-
-    def get_balance_sheet_annual(self):
-        return(self.query.balance_sheet("a"))
-    
-    def get_income_statement_quarter(self):
-        return(self.query.income_statement("q"))
-    
-    def get_income_statement_annual(self):
-        return(self.query.income_statement("a"))
-    
-    def get_history_price(self, period="ytd", interval="1d", start=None, end=None):
-        return(self.query.history(period=period, interval=interval, start=start, end=end))
-
-
-#Sub Class Annual Data Value
-class CalculateAnnual(QueryData):
+#Calculate Quarter Data Value
+class CalculateQuarter(QueryData):
 
     def __init__(self, ticker, date_input):
         super().__init__(ticker)
-        self.balance_sheet_annual = self.get_balance_sheet_annual()
-        self.income_statement_annual = self.get_income_statement_annual()
+        self.balance_sheet_quartal = self.get_balance_sheet_quarter()
+        self.income_statement_quartal = self.get_income_statement_quarter()
         self.input_date = pd.to_datetime(date_input)
 
         #Gets Date Component (Year, Month, Date)
@@ -40,24 +17,28 @@ class CalculateAnnual(QueryData):
 
         #Always Used Components
         ##Select Row Based on User Date Input
-        rows = self.balance_sheet_annual[self.balance_sheet_annual['asOfDate'] == self.input_date]
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
         self.equity = rows["StockholdersEquity"][0]
         self.shares = rows["ShareIssued"][0]
 
         ##Collect 1 Month Historical Price
         self.historical_price = self.get_history_price(period="1mo", interval="1d", 
-                                                       start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
+                                                  start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
         
-        ##Select Some Annual in a Year based on user input date
-        selected_income_statement = self.income_statement_annual[(self.income_statement_annual['asOfDate'].dt.year == self.year) 
-                                                                 & (self.income_statement_annual['periodType'] == "12M")]
+        ##Select Some Quartals in a Year based on user input date
+        selected_income_statement = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
+                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
+                                                           & (self.income_statement_quartal['periodType'] == "3M")]
+        ###Check Total Quartal
+        total_of_quartal = selected_income_statement.shape
+        self.quartal = total_of_quartal[0]
         
-        ###Revenue in period of time
-        self.revenue = selected_income_statement["TotalRevenue"][0]
+        ###Sum All revenue in period of time
+        self.cumulative_revenue = selected_income_statement["TotalRevenue"].sum()
 
-        #Net Income in period of time
-        self.net_income = selected_income_statement["NetIncomeCommonStockholders"][0]
-        
+        #Sum All Net Income in period of time
+        self.cumulative_net_income = selected_income_statement["NetIncomeCommonStockholders"].sum()
+
     def get_specific_historical_price(self):
         #Change Date Index into New Column
         historical_price = self.historical_price.reset_index()
@@ -92,20 +73,28 @@ class CalculateAnnual(QueryData):
         return float(f'{pbv:.2f}')
 
     def calculate_ROE(self):
-        #ROE Data
-        roe = ((self.net_income)/(self.equity))*100
+        #Annualization
+        cumulative_net_income = self.cumulative_net_income
+        total_quartal = self.quartal
+        roe = ((cumulative_net_income * (4/total_quartal))/(self.equity))*100
 
         return float(f'{roe:.2f}')
     
     def calculate_net_profit_margin(self):
+        #Get Components
+        cumulative_revenue = self.cumulative_revenue
+        cummulative_net_income = self.cumulative_net_income
+
         #NPM Data
-        npm = (self.net_income/self.revenue)*100
+        npm = (cummulative_net_income/cumulative_revenue)*100
 
         return float(f'{npm:.2f}')
 
     def calculate_EPS(self):
-        #EPS Data
-        eps = ((self.net_income)/(self.shares))
+        #Annulaization
+        cumulative_net_income = self.cumulative_net_income
+        total_quartal = self.quartal
+        eps = ((cumulative_net_income * (4/total_quartal))/(self.shares))
 
         return float(f'{eps:.2f}')
     
@@ -122,16 +111,16 @@ class CalculateAnnual(QueryData):
         #Return Fundamentals Calculations
         data_fundamentals = {
             "Code": f"{self.code}",
-            "Type Report": "Annual",
+            "Type Report": "Quartal",
             "Date": self.input_date.strftime('%Y-%m-%d'),
             "Fundamental Data": {
-                "Cumulative Revenue": self.revenue,                   #in rupiah
-                "Cumulative Net Income": self.net_income,             #in rupiah
-                "BV": self.calculate_book_value(),                    #in rupiah
+                "Cumulative Revenue": self.cumulative_revenue,                  #in rupiah
+                "Cumulative Net Income": self.cumulative_net_income,            #in rupiah
+                "BV": self.calculate_book_value(),                              #in rupiah
                 "PBV": self.calculate_price_book_value(),
-                "NPM": self.calculate_net_profit_margin(),            #in %
-                "ROE": self.calculate_ROE(),                          #in %
-                "EPS": self.calculate_EPS(),                          #in rupiah
+                "NPM": self.calculate_net_profit_margin(),                      #in %
+                "ROE": self.calculate_ROE(),                                    #in %
+                "EPS": self.calculate_EPS(),                                    #in rupiah
                 "PER": self.calculate_PER()
             }
         }
