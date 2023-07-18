@@ -1,4 +1,4 @@
-from query_data import QueryData, CalculateQuarter, CalculateAnnual
+from analysis_data import QueryData, CalculateQuarter, CalculateAnnual
 import json
 import pandas as pd
 
