@@ -1,9 +1,8 @@
 from yahooquery import Ticker
 import pandas as pd
 
-#Query Data for Specific Ticker
+# Query Data for Specific Ticker
 class QueryData:
-
     def __init__(self, ticker):
         self.code = ".".join([ticker, "JK"])
         self.query = Ticker(self.code.upper())
