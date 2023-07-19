@@ -113,7 +113,7 @@ class CalculateQuarter(QueryData):
     def output(self):
         # Return Fundamentals Calculations
         data_fundamentals = {
-            "Code": f"{self.code}",
+            "Code": f"{self.ticker}",
             "Type Report": "Quartal",
             "Date": self.input_date.strftime('%Y-%m-%d'),
             "Fundamental Data": {

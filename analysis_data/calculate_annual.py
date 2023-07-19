@@ -97,7 +97,7 @@ class CalculateAnnual(QueryData):
     def output(self):
         # Return Fundamentals Calculations
         data_fundamentals = {
-            "Code": f"{self.code}",
+            "Code": f"{self.ticker}",
             "Type Report": "Annual",
             "Date": self.input_date.strftime('%Y-%m-%d'),
             "Fundamental Data": {

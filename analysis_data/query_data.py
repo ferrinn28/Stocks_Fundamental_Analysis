@@ -4,8 +4,9 @@ import pandas as pd
 # Query Data for Specific Ticker
 class QueryData:
     def __init__(self, ticker):
-        self.code = ".".join([ticker, "JK"])
-        self.query = Ticker(self.code.upper())
+        self.ticker = ticker
+        code = ".".join([ticker, "JK"])
+        self.query = Ticker(code.upper())
 
     def get_balance_sheet_quarter(self):
         return(self.query.balance_sheet("q"))
