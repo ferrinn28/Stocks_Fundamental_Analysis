@@ -1,6 +1,7 @@
 from analysis_data import QueryData, CalculateQuarter, CalculateAnnual
-import json
-import pandas as pd
+from create_report import ExcelWriter
+
+PATH = 'C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing'
 
 if __name__ == "__main__":
     ticker_code = input("Kode Emiten: ")
@@ -13,29 +14,16 @@ if __name__ == "__main__":
         for i, j in enumerate(list_date, start=1):
             print(f"{i}.", j)
 
-        #Choose Date to Review
+        # Choose Date to Review
         date_input = int(input("Choose the Date: "))
         date = list_date[date_input -1]
 
-        #Calculating Fundamental Parameter
+        # Calculating Fundamental Parameter
         searching_data = CalculateQuarter(ticker_code, date)
+        output = searching_data.output()
 
-        #Output in Dictionary
-        pd.options.display.float_format = '{:.2f}'.format
-
-        data_fundamentals = searching_data.output()
-        #print(data_fundamentals)
-
-        #Convert into json format
-        json_format = json.dumps(data_fundamentals, indent=4)
-        print(json_format, "\n")
-
-        #Convert into Dataframe
-        df_upload = pd.DataFrame(json.loads(json_format))
-        print(df_upload)
-        #print(df_upload.index.values)
-        #print(df_upload.loc["BV"]["Code"])
-        #df_upload.to_excel(excel_writer="C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing\\output.xlsx", sheet_name=f'{ticker_code}')
+        # Create a Excel Report
+        ExcelWriter(PATH, output).create_report()
 
     elif checking.lower() =="a":
         list_date = sheet_overview.get_balance_sheet_annual()['asOfDate'].dt.strftime('%Y-%m-%d').tolist()
@@ -43,26 +31,13 @@ if __name__ == "__main__":
         for i, j in enumerate(list_date, start=1):
             print(f"{i}.", j)
 
-        #Choose Date to Review
+        # Choose Date to Review
         date_input = int(input("Choose the Date: "))
         date = list_date[date_input -1]
 
-        #Calculating Fundamental Parameter
+        # Calculating Fundamental Parameter
         searching_data = CalculateAnnual(ticker_code, date)
+        output = searching_data.output()
 
-        #Output in Dictionary
-        pd.options.display.float_format = '{:.2f}'.format
-
-        data_fundamentals = searching_data.output()
-        #print(data_fundamentals)
-
-        #Convert into json format
-        json_format = json.dumps(data_fundamentals, indent=4)
-        print(json_format, "\n")
-
-        #Convert into Dataframe
-        df_upload = pd.DataFrame(json.loads(json_format))
-        print(df_upload)
-        #print(df_upload.index.values)
-        #print(df_upload.loc["BV"]["Code"])
-        #df_upload.to_excel(excel_writer="C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing\\output.xlsx", sheet_name=f'{ticker_code}')
+        # Create a Excel Report
+        ExcelWriter(PATH, output).create_report() 
