@@ -1,5 +1,5 @@
 from analysis_data import QueryData, CalculateQuarter, CalculateAnnual
-from create_report import ExcelWriter
+from create_report import CreateExcel
 
 PATH = 'C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing'
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
         if user_status == "y":
             # Create a Excel Report
-            ExcelWriter(PATH, output).create_report()
+            CreateExcel(PATH, output).create_report()
 
         else:
             print(output)
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
         if user_status == "y":
             # Create a Excel Report
-            ExcelWriter(PATH, output).create_report()
+            CreateExcel(PATH, output).create_report()
 
         else:
             print(output)

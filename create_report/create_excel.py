@@ -1,6 +1,6 @@
 import pandas as pd
 
-class ExcelWriter():
+class CreateExcel():
     def __init__(self, path, fundamental_data):
         self.path = path
         self.fundamental_data = fundamental_data
