@@ -22,8 +22,14 @@ if __name__ == "__main__":
         searching_data = CalculateQuarter(ticker_code, date)
         output = searching_data.output()
 
-        # Create a Excel Report
-        ExcelWriter(PATH, output).create_report()
+        user_status = input("Generate Report? [y/N]: ")
+
+        if user_status == "y":
+            # Create a Excel Report
+            ExcelWriter(PATH, output).create_report()
+
+        else:
+            print(output)
 
     elif checking.lower() =="a":
         list_date = sheet_overview.get_balance_sheet_annual()['asOfDate'].dt.strftime('%Y-%m-%d').tolist()
@@ -39,5 +45,11 @@ if __name__ == "__main__":
         searching_data = CalculateAnnual(ticker_code, date)
         output = searching_data.output()
 
-        # Create a Excel Report
-        ExcelWriter(PATH, output).create_report() 
+        user_status = input("Generate Report? [y/N]: ")
+
+        if user_status == "y":
+            # Create a Excel Report
+            ExcelWriter(PATH, output).create_report()
+
+        else:
+            print(output)
