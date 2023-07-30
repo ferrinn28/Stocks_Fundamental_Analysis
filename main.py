@@ -1,9 +1,11 @@
 from analysis_data import QueryData, CalculateQuarter, CalculateAnnual
 from create_report import CreateExcel
+from database_connector import MysqlConnector
 
 PATH = 'C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing'
 
 if __name__ == "__main__":
+    MysqlConnector()
     ticker_code = input("Kode Emiten: ")
     sheet_overview = QueryData(ticker_code)
     checking = input("Check Annual (a) or Quartal (q)?:")
