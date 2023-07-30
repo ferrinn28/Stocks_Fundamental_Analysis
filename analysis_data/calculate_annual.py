@@ -16,7 +16,7 @@ class CalculateAnnual(QueryData):
 
         # Always Used Components
         ## Select Row Based on User Date Input
-        rows = self.balance_sheet_annual[self.balance_sheet_annual['asOfDate'] == self.input_date]
+        rows = self.balance_sheet_annual[self.balance_sheet_annual["asOfDate"] == self.input_date]
         self.equity = rows["StockholdersEquity"][0]
         self.shares = rows["ShareIssued"][0]
 
@@ -25,8 +25,8 @@ class CalculateAnnual(QueryData):
                                                        start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
         
         ## Select Annual Income in Specific Year Based on User Input Date
-        selected_income_statement = self.income_statement_annual[(self.income_statement_annual['asOfDate'].dt.year == self.year) 
-                                                                 & (self.income_statement_annual['periodType'] == "12M")]
+        selected_income_statement = self.income_statement_annual[(self.income_statement_annual["asOfDate"].dt.year == self.year) 
+                                                                 & (self.income_statement_annual["periodType"] == "12M")]
         
         ### Revenue in Period of Time
         self.revenue = selected_income_statement["TotalRevenue"][0]
@@ -65,25 +65,25 @@ class CalculateAnnual(QueryData):
         # Price Book Ratio Data
         pbv = historical_price/(self.calculate_book_value())
 
-        return float(f'{pbv:.2f}')
+        return float(f"{pbv:.2f}")
 
     def calculate_roe(self):
         # Retrun on Equity Data
         roe = ((self.net_income)/(self.equity))*100
 
-        return float(f'{roe:.2f}')
+        return float(f"{roe:.2f}")
     
     def calculate_net_profit_margin(self):
         # Net Profit Margin Data
         npm = (self.net_income/self.revenue)*100
 
-        return float(f'{npm:.2f}')
+        return float(f"{npm:.2f}")
 
     def calculate_eps(self):
         # Earning per Shares Data
         eps = ((self.net_income)/(self.shares))
 
-        return float(f'{eps:.2f}')
+        return float(f"{eps:.2f}")
     
     def calculate_per(self):
         # Get Historical Price
@@ -92,14 +92,14 @@ class CalculateAnnual(QueryData):
         # Calculate Price Earning Ratio
         per = historical_price/(self.calculate_eps())
 
-        return float(f'{per:.2f}')
+        return float(f"{per:.2f}")
     
     def output(self):
         # Return Fundamentals Calculations
         data_fundamentals = {
             "Code": f"{self.ticker}",
             "Type Report": "Annual",
-            "Date": self.input_date.strftime('%Y-%m-%d'),
+            "Date": self.input_date.strftime("%Y-%m-%d"),
             "Fundamental Data": {
                 "Cumulative Revenue": self.revenue,                   # In Rupiah
                 "Cumulative Net Income": self.net_income,             # In Rupiah

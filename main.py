@@ -11,7 +11,7 @@ if __name__ == "__main__":
     checking = input("Check Annual (a) or Quartal (q)?:")
 
     if checking.lower() == "q":
-        list_date = sheet_overview.get_balance_sheet_quarter()['asOfDate'].dt.strftime('%Y-%m-%d').tolist()
+        list_date = sheet_overview.get_balance_sheet_quarter()['asOfDate'].dt.strftime("%Y-%m-%d").tolist()
         print("AVAILABLE DATE FOR THE REPORTS")
         for i, j in enumerate(list_date, start=1):
             print(f"{i}.", j)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
             print(output)
 
     elif checking.lower() =="a":
-        list_date = sheet_overview.get_balance_sheet_annual()['asOfDate'].dt.strftime('%Y-%m-%d').tolist()
+        list_date = sheet_overview.get_balance_sheet_annual()['asOfDate'].dt.strftime("%Y-%m-%d").tolist()
         print("AVAILABLE DATE FOR THE REPORTS")
         for i, j in enumerate(list_date, start=1):
             print(f"{i}.", j)

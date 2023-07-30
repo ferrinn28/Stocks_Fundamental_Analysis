@@ -1,20 +1,15 @@
-import os
-
 import pyodbc
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 class MysqlConnector:
     def __init__(self):
-        # Load env file
-        load_dotenv()
-        MYSQL_SERVER = os.getenv("MYSQL_SERVER")
-        MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
-        MYSQL_USERNAME = os.getenv("MYSQL_USERNAME")
-        MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+        # Load env file as Dictionary type
+        config = dotenv_values(".env")
 
         # Create the connection string
         connection_string = f"DRIVER={{MySQL ODBC 8.0 Unicode Driver}};\
-            SERVER={MYSQL_SERVER};DATABASE={MYSQL_DATABASE};UID={MYSQL_USERNAME};PWD={MYSQL_PASSWORD};"
+            SERVER={config['MYSQL_SERVER']};DATABASE={config['MYSQL_DATABASE']};\
+                UID={config['MYSQL_USERNAME']};PWD={config['MYSQL_PASSWORD']};"
 
         try:
             # Establish the connection

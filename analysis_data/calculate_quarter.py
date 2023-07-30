@@ -16,7 +16,7 @@ class CalculateQuarter(QueryData):
 
         # Always Used Components
         ## Select Row Based on User Date Input
-        rows = self.balance_sheet_quartal[self.balance_sheet_quartal['asOfDate'] == self.input_date]
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal["asOfDate"] == self.input_date]
         self.equity = rows["StockholdersEquity"][0]
         self.shares = rows["ShareIssued"][0]
 
@@ -25,9 +25,9 @@ class CalculateQuarter(QueryData):
                                                   start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
         
         ## Select Some Quartals in a Year Based on User Input Date
-        selected_income_statement = self.income_statement_quartal[(self.income_statement_quartal['asOfDate'].dt.year == self.year) 
-                                                           & (self.income_statement_quartal['asOfDate'].dt.month <= self.month)
-                                                           & (self.income_statement_quartal['periodType'] == "3M")]
+        selected_income_statement = self.income_statement_quartal[(self.income_statement_quartal["asOfDate"].dt.year == self.year) 
+                                                           & (self.income_statement_quartal["asOfDate"].dt.month <= self.month)
+                                                           & (self.income_statement_quartal["periodType"] == "3M")]
         ### Check Total Quartal
         total_of_quartal = selected_income_statement.shape
         self.quartal = total_of_quartal[0]
@@ -69,7 +69,7 @@ class CalculateQuarter(QueryData):
         # Price Book Ratio Data
         pbv = historical_price/(self.calculate_book_value())
 
-        return float(f'{pbv:.2f}')
+        return float(f"{pbv:.2f}")
 
     def calculate_roe(self):
         # Annualization
@@ -79,7 +79,7 @@ class CalculateQuarter(QueryData):
         # Return of Equity Data
         roe = ((cumulative_net_income * (4/total_quartal))/(self.equity))*100
 
-        return float(f'{roe:.2f}')
+        return float(f"{roe:.2f}")
     
     def calculate_net_profit_margin(self):
         # Get Components
@@ -89,7 +89,7 @@ class CalculateQuarter(QueryData):
         # Net Profit Margin Data
         npm = (cummulative_net_income/cumulative_revenue)*100
 
-        return float(f'{npm:.2f}')
+        return float(f"{npm:.2f}")
 
     def calculate_eps(self):
         # Annulaization
@@ -99,7 +99,7 @@ class CalculateQuarter(QueryData):
         # Earning per Shares Data
         eps = ((cumulative_net_income * (4/total_quartal))/(self.shares))
 
-        return float(f'{eps:.2f}')
+        return float(f"{eps:.2f}")
     
     def calculate_per(self):
         # Get Historical Price
@@ -108,14 +108,14 @@ class CalculateQuarter(QueryData):
         # Calculate Price Earning Ratio
         per = historical_price/(self.calculate_eps())
 
-        return float(f'{per:.2f}')
+        return float(f"{per:.2f}")
     
     def output(self):
         # Return Fundamentals Calculations
         data_fundamentals = {
             "Code": f"{self.ticker}",
             "Type Report": "Quartal",
-            "Date": self.input_date.strftime('%Y-%m-%d'),
+            "Date": self.input_date.strftime("%Y-%m-%d"),
             "Fundamental Data": {
                 "Cumulative Revenue": self.cumulative_revenue,                  # In Rupiah
                 "Cumulative Net Income": self.cumulative_net_income,            # In Rupiah

@@ -12,6 +12,6 @@ class CreateExcel():
 
         # Create a Excel File
         df_fundamental.to_excel(excel_writer=f"{self.path}\\{file_name}", 
-                                sheet_name='Fundamental Data')
+                                sheet_name="Fundamental Data")
         
         print(f"Report is Created in {self.path}\\{file_name}")
