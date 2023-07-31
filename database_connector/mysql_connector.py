@@ -16,8 +16,23 @@ class MysqlConnector:
             print("Connection Establish")
             self.connection = pyodbc.connect(connection_string)
             print("Connection Successfull")
-            # Close the connection when done
-            self.connection.close()
             
         except Exception as e:
             print(f"Error: {e}")
+
+    def insert_basic_info(self, basic_info):
+        # Create Cursor
+        cursor = self.connection.cursor()
+
+        # Insert data into the basic_info table
+        insert_query = "INSERT INTO basic_info (stock_id, sector_type, industry_type, website, country) VALUES (?, ?, ?, ?, ?)"
+        cursor.execute(insert_query, basic_info["Code"], basic_info["Sector"], basic_info["Industry"], \
+                       basic_info["Website"], basic_info["Country"])
+
+        # Commit the transaction
+        self.connection.commit()
+
+        # Close the cursor and connection
+        cursor.close()
+        self.connection.close()
+        print("INSERT DATA IS SUCCESSFULL")
