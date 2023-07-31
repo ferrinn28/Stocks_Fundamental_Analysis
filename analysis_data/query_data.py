@@ -22,3 +22,18 @@ class QueryData:
     
     def get_history_price(self, period="ytd", interval="1d", start=None, end=None):
         return(self.query.history(period=period, interval=interval, start=start, end=end))
+    
+    def get_basic_info(self):
+        basic_data = self.query.asset_profile
+        ticker_code = ".".join([self.ticker, "JK"])
+
+        # Get Sector, Industry, Website, and Country
+        basic_info = {
+            "Code": f"{self.ticker}",
+            "Sector": f"{basic_data[ticker_code]['sector']}",
+            "Industry": f"{basic_data[ticker_code]['industry']}",
+            "Website": f"{basic_data[ticker_code]['website']}",
+            "Country": f"{basic_data[ticker_code]['country']}"
+        }
+
+        return basic_info

@@ -5,7 +5,7 @@ from database_connector import MysqlConnector
 PATH = 'C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing'
 
 if __name__ == "__main__":
-    MysqlConnector()
+    #MysqlConnector()
     ticker_code = input("Kode Emiten: ")
     sheet_overview = QueryData(ticker_code)
     checking = input("Check Annual (a) or Quartal (q)?:")
@@ -32,6 +32,7 @@ if __name__ == "__main__":
 
         else:
             print(output)
+            print(sheet_overview.get_basic_info())
 
     elif checking.lower() =="a":
         list_date = sheet_overview.get_balance_sheet_annual()['asOfDate'].dt.strftime("%Y-%m-%d").tolist()
@@ -55,3 +56,4 @@ if __name__ == "__main__":
 
         else:
             print(output)
+            print(sheet_overview.get_basic_info())
