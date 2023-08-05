@@ -36,6 +36,7 @@ if __name__ == "__main__":
             store_db = input("Store Basic Data into DB? [y/N]: ")
             if store_db == "y":
                 MysqlConnector().insert_basic_info(sheet_overview.get_basic_info())
+                MysqlConnector().insert_quarter_fundamental(output)
             else:
                 pass
 

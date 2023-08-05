@@ -27,9 +27,15 @@ class MysqlConnector:
             cursor = self.connection.cursor()
 
             # Insert data into the basic_info table
-            insert_query = "INSERT INTO basic_info (stock_id, sector_type, industry_type, website, country) VALUES (?, ?, ?, ?, ?)"
-            cursor.execute(insert_query, basic_info["Code"], basic_info["Sector"], basic_info["Industry"], \
-                       basic_info["Website"], basic_info["Country"])
+            insert_query = """
+            INSERT INTO basic_info 
+            (stock_id, sector_type, industry_type, website, country) 
+            VALUES (?, ?, ?, ?, ?)
+            """
+
+            cursor.execute(insert_query, 
+                           basic_info["Code"], basic_info["Sector"], basic_info["Industry"], 
+                           basic_info["Website"], basic_info["Country"])
 
             # Commit the transaction
             self.connection.commit()
@@ -37,9 +43,46 @@ class MysqlConnector:
 
         except pyodbc.Error as err:
             # Get Some Error Code and Error Message
-            error_msg = err.args[1]
-            print(error_msg)
+            #error_msg = err.args[1]
+            #print(error_msg)
+            print(err)
 
+        finally:
+            # Close the cursor and connection
+            cursor.close()
+            self.connection.close()
+            print("Connection Close")
+
+    def insert_quarter_fundamental(self, quarter_data):
+        # Insert Ticker's Quarter Fundamental Datas
+        try:
+            # Create Cursor
+            cursor = self.connection.cursor()
+
+            # Insert data into the basic_info table
+            insert_query = """
+            INSERT INTO quarter_fundamental 
+            (report_id, stock_id, date, book_value, price_book_value, 
+            net_profit_margin, return_of_equity, earning_per_shares, price_earning_ratio) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            cursor.execute(insert_query,
+                           quarter_data["Type Report"], quarter_data["Code"], 
+                           quarter_data["Date"], quarter_data["Fundamental Data"]["BV"], 
+                           quarter_data["Fundamental Data"]["PBV"], quarter_data["Fundamental Data"]["NPM"],
+                           quarter_data["Fundamental Data"]["ROE"], quarter_data["Fundamental Data"]["EPS"],
+                           quarter_data["Fundamental Data"]["PER"])
+
+            # Commit the transaction
+            self.connection.commit()
+            print("INSERT DATA IS SUCCESSFULL")
+            
+        except pyodbc.Error as err:
+            # Get Some Error Code and Error Message
+            #error_msg = err.args[1]
+            #print(error_msg)
+            print(err)
+        
         finally:
             # Close the cursor and connection
             cursor.close()
