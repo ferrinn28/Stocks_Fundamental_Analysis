@@ -110,11 +110,26 @@ class CalculateQuarter(QueryData):
 
         return float(f"{per:.2f}")
     
+    def check_quarter_value(self):
+        q1 = [1, 2, 3]
+        q2 = [4, 5, 6]
+        q3 = [7, 8, 9]
+        q4 = [10, 11, 12]
+        
+        if self.month in q1:
+            return "Q1"
+        elif self.month in q2:
+            return "Q2"
+        elif self.month in q3:
+            return "Q3"
+        elif self.month in q4:
+            return "Q4"
+    
     def output(self):
         # Return Fundamentals Calculations
         data_fundamentals = {
             "Code": f"{self.ticker}",
-            "Type Report": "Quartal",
+            "Type Report": f"{self.ticker}-{self.check_quarter_value()}-{self.year}",
             "Date": self.input_date.strftime("%Y-%m-%d"),
             "Fundamental Data": {
                 "Cumulative Revenue": self.cumulative_revenue,                  # In Rupiah
