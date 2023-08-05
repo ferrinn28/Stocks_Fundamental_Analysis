@@ -17,10 +17,11 @@ class MysqlConnector:
             self.connection = pyodbc.connect(connection_string)
             print("Connection Successfull")
             
-        except Exception as e:
-            print(f"Error: {e}")
+        except pyodbc.Error as e:
+            print(f"Error while establishing connection: {e}")
 
     def insert_basic_info(self, basic_info):
+        # Insert Ticker's Sector, Industry, Website and Country to DB
         try:
             # Create Cursor
             cursor = self.connection.cursor()
@@ -32,15 +33,15 @@ class MysqlConnector:
 
             # Commit the transaction
             self.connection.commit()
-
-            # Close the cursor and connection
-            cursor.close()
-            self.connection.close()
             print("INSERT DATA IS SUCCESSFULL")
 
         except pyodbc.Error as err:
             # Get Some Error Code and Error Message
             error_msg = err.args[1]
             print(error_msg)
-            print("Connection Closed")
+
+        finally:
+            # Close the cursor and connection
+            cursor.close()
             self.connection.close()
+            print("Connection Close")
