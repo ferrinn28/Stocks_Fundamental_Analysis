@@ -98,7 +98,7 @@ class CalculateAnnual(QueryData):
         # Return Fundamentals Calculations
         data_fundamentals = {
             "Code": f"{self.ticker}",
-            "Type Report": "Annual",
+            "Type Report": f"{self.ticker}-ANN-{self.year}",
             "Date": self.input_date.strftime("%Y-%m-%d"),
             "Fundamental Data": {
                 "Cumulative Revenue": self.revenue,                   # In Rupiah
