@@ -9,5 +9,9 @@ __pycache__/
 */.env.*
 */.env
 
+# Ignore .sh files
+*/*.sh
+.sh
+
 .vscode/
 *.sql
