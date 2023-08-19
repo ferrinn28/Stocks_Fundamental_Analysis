@@ -2,7 +2,12 @@
 Testing/
 __pycache__/
 */__pycache__/
+
+#Environtment File
 .env
+.env.*
+*/.env.*
+*/.env
+
 .vscode/
 *.sql
-Scheduler/
