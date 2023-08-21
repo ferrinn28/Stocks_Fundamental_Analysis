@@ -56,7 +56,8 @@ try:
     idx_now = percentage_idx * idx_base[0][0]
 
     #Insert Current IDXHIDIV20 Value
-    cursor.execute(insert_current_index, (f"{idx_now:.2f}",))
+    cursor.execute(insert_current_index, (idx_now,))
+    connection.commit()
 
 except mysql.connector.Error as err:
     print("MySQL Error:", err)
