@@ -25,10 +25,12 @@ class QueryData:
     
     def get_basic_info(self):
         basic_data = self.query.asset_profile
+        additional_data = self.query.quote_type
         ticker_code = ".".join([self.ticker, "JK"])
 
         # Get Sector, Industry, Website, and Country
         basic_info = {
+            "Name": f"{additional_data[ticker_code]['longName']}",
             "Code": f"{self.ticker}",
             "Sector": f"{basic_data[ticker_code]['sector']}",
             "Industry": f"{basic_data[ticker_code]['industry']}",
