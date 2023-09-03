@@ -15,11 +15,6 @@ class CalculateQuarter(QueryData):
         self.day = self.input_date.day
 
         # Always Used Components
-        ## Select Row Based on User Date Input
-        rows = self.balance_sheet_quartal[self.balance_sheet_quartal["asOfDate"] == self.input_date]
-        self.equity = rows["StockholdersEquity"][0]
-        self.shares = rows["ShareIssued"][0]
-
         ## Collect 1 Month Historical Price
         self.historical_price = self.get_history_price(period="1mo", interval="1d", 
                                                   start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
@@ -32,11 +27,32 @@ class CalculateQuarter(QueryData):
         total_of_quartal = selected_income_statement.shape
         self.quartal = total_of_quartal[0]
         
-        ### Sum All Revenue in Period of Time
-        self.cumulative_revenue = selected_income_statement["TotalRevenue"].sum()
+        ## Select Row Based on User Date Input
+        rows = self.balance_sheet_quartal[self.balance_sheet_quartal["asOfDate"] == self.input_date]
+        self.shares = rows["ShareIssued"][0]
 
-        # Sum All Net Income in Period of Time
-        self.cumulative_net_income = selected_income_statement["NetIncomeCommonStockholders"].sum()
+        # Check Financial Currency USD or IDR?
+        if self.currency_type == "IDR":
+            self.equity = rows["StockholdersEquity"][0]
+
+            ### Sum All Revenue in Period of Time
+            self.cumulative_revenue = selected_income_statement["TotalRevenue"].sum()
+
+            # Sum All Net Income in Period of Time
+            self.cumulative_net_income = selected_income_statement["NetIncomeCommonStockholders"].sum()
+
+        elif self.currency_type == "USD":
+            # Get USDIDR Value
+            data_usdidr = self.get_usd_idr_value(start=f"{self.year}-{self.month}-{self.day}")
+            price_usdidr = data_usdidr["adjclose"].iloc[0]
+
+            self.equity = (rows["StockholdersEquity"][0])*price_usdidr
+
+            ### Sum All Revenue in Period of Time
+            self.cumulative_revenue = (selected_income_statement["TotalRevenue"].sum())*price_usdidr
+
+            # Sum All Net Income in Period of Time
+            self.cumulative_net_income = (selected_income_statement["NetIncomeCommonStockholders"].sum())*price_usdidr
 
     def get_specific_historical_price(self):
         # Change Date Index into New Column

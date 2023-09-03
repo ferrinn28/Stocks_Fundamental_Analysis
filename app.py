@@ -48,7 +48,7 @@ def list_report():
 
     return response
 
-@app.route("/api/v1/quartal-fundamental/", methods=["POST"])
+@app.route("/api/v1/quartal-fundamental", methods=["POST"])
 def report_quartal():
     # Get Incoming POST Message
     request_data = request.json

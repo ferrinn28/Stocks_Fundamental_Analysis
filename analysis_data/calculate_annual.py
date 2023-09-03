@@ -15,11 +15,6 @@ class CalculateAnnual(QueryData):
         self.day = self.input_date.day
 
         # Always Used Components
-        ## Select Row Based on User Date Input
-        rows = self.balance_sheet_annual[self.balance_sheet_annual["asOfDate"] == self.input_date]
-        self.equity = rows["StockholdersEquity"][0]
-        self.shares = rows["ShareIssued"][0]
-
         ## Collect 1 Month Historical Price
         self.historical_price = self.get_history_price(period="1mo", interval="1d", 
                                                        start=f"{self.year}-{self.month}-1", end=f"{self.year}-{self.month}-{self.day}")
@@ -28,11 +23,32 @@ class CalculateAnnual(QueryData):
         selected_income_statement = self.income_statement_annual[(self.income_statement_annual["asOfDate"].dt.year == self.year) 
                                                                  & (self.income_statement_annual["periodType"] == "12M")]
         
-        ### Revenue in Period of Time
-        self.revenue = selected_income_statement["TotalRevenue"][0]
+        ## Select Row Based on User Date Input
+        rows = self.balance_sheet_annual[self.balance_sheet_annual["asOfDate"] == self.input_date]
+        self.shares = rows["ShareIssued"][0]
 
-        ## Net Income in Period of Time
-        self.net_income = selected_income_statement["NetIncomeCommonStockholders"][0]
+        # Check Financial Currency USD or IDR?
+        if self.currency_type == "IDR":
+            self.equity = rows["StockholdersEquity"][0]
+
+            ### Revenue in Period of Time
+            self.revenue = selected_income_statement["TotalRevenue"][0]
+
+            ## Net Income in Period of Time
+            self.net_income = selected_income_statement["NetIncomeCommonStockholders"][0]
+
+        elif self.currency_type == "USD":
+             # Get USDIDR Value
+            data_usdidr = self.get_usd_idr_value(start=f"{self.year}-{self.month}-{self.day}")
+            price_usdidr = data_usdidr["adjclose"].iloc[0]
+
+            self.equity = (rows["StockholdersEquity"][0])*price_usdidr
+
+            ### Revenue in Period of Time
+            self.revenue = (selected_income_statement["TotalRevenue"][0])*price_usdidr
+
+            ## Net Income in Period of Time
+            self.net_income = (selected_income_statement["NetIncomeCommonStockholders"][0])*price_usdidr
         
     def get_specific_historical_price(self):
         # Change Date Index into New Column
