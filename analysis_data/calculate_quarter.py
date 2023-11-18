@@ -29,11 +29,11 @@ class CalculateQuarter(QueryData):
         
         ## Select Row Based on User Date Input
         rows = self.balance_sheet_quartal[self.balance_sheet_quartal["asOfDate"] == self.input_date]
-        self.shares = rows["ShareIssued"][0]
+        self.shares = rows["ShareIssued"].iloc[0]
 
         # Check Financial Currency USD or IDR?
         if self.currency_type == "IDR":
-            self.equity = rows["StockholdersEquity"][0]
+            self.equity = rows["StockholdersEquity"].iloc[0]
 
             ### Sum All Revenue in Period of Time
             self.cumulative_revenue = selected_income_statement["TotalRevenue"].sum()
