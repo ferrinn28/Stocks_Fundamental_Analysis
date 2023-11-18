@@ -1,6 +1,7 @@
 from analysis_data import QueryData, CalculateQuarter, CalculateAnnual
 from create_report import CreateExcel
 from database_connector import MysqlConnector
+from pprint import pprint
 
 PATH = 'C:\\Users\\ASUS\\Documents\\FInancial Startegy\\Project_Fundamental\\Testing'
 
@@ -30,15 +31,19 @@ if __name__ == "__main__":
             CreateExcel(PATH, output).create_report()
 
         else:
-            print(output)
-            print(sheet_overview.get_basic_info())
+            pprint(output)
+            pprint(sheet_overview.get_basic_info())
 
-            store_db = input("Store Basic Data into DB? [y/N]: ")
-            if store_db == "y":
+            basic_store_db = input("Store Basic Data into DB? [y/N]: ")
+            if basic_store_db == "y":
                 MysqlConnector().insert_basic_info(sheet_overview.get_basic_info())
-                MysqlConnector().insert_quarter_fundamental(output)
             else:
-                pass
+                quartal_store_db = input("Store Quartal Data into DB? [y/N]: ")
+
+                if quartal_store_db == "y":
+                    MysqlConnector().insert_quarter_fundamental(output)
+                else:
+                    pass
 
     elif checking.lower() =="a":
         list_date = sheet_overview.get_balance_sheet_annual()['asOfDate'].dt.strftime("%Y-%m-%d").tolist()
