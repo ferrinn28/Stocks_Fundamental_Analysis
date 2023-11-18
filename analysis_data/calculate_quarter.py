@@ -46,7 +46,7 @@ class CalculateQuarter(QueryData):
             data_usdidr = self.get_usd_idr_value(start=f"{self.year}-{self.month}-{self.day}")
             price_usdidr = data_usdidr["adjclose"].iloc[0]
 
-            self.equity = (rows["StockholdersEquity"][0])*price_usdidr
+            self.equity = (rows["StockholdersEquity"].iloc[0])*price_usdidr
 
             ### Sum All Revenue in Period of Time
             self.cumulative_revenue = (selected_income_statement["TotalRevenue"].sum())*price_usdidr
